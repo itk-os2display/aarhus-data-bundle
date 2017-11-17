@@ -1,0 +1,6 @@
+services:
+    itk_aarhus_data.data_service:
+        class: Itk\AarhusDataBundle\Service\DataService
+        arguments: ['@doctrine.orm.entity_manager', '@translator']
+        tags:
+          - { name: kernel.event_listener, event: ik.cron, method: onCron }

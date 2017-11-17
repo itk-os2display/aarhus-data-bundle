@@ -1,0 +1,5 @@
+field:
+  temperature: Temperatur
+  daylight: Dagslys
+  sound: Lydniveau
+  humidity: Luftfugtighed

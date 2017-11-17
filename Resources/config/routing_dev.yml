@@ -1,0 +1,3 @@
+itk_aarhus_data_homepage:
+    path:     /itk_aarhus_data/test
+    defaults: { _controller: ItkAarhusDataBundle:Default:test }
