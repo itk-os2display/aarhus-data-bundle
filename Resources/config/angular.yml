@@ -1,0 +1,11 @@
+assets:
+
+modules:
+  itkDataModule:
+    files:
+      - bundles/itkaarhusdata/apps/itkDataModule/itkDataSourcePicker.js
+
+apps:
+  ikApp:
+    dependencies:
+      - itkDataModule

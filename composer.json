@@ -3,7 +3,8 @@
   "description": "Os2Display aarhus data",
   "type": "symfony-bundle",
   "require": {
-    "os2display/admin-bundle": "^1.0"
+    "os2display/admin-bundle": "^1.0",
+    "itk-os2display/template-extension-bundle": "^1.0"
   },
   "autoload": {
     "psr-4": {

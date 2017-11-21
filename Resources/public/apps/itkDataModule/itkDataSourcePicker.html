@@ -1,0 +1,23 @@
+<div class="itk-template-extension--tool" data-ng-class="{'open': open, 'close': !open}">
+  <div class="itk-template-extension--tool-header">
+    <div class="itk-template-extension--button" data-ng-click="closeTool()">
+      Afslut
+    </div>
+  </div>
+
+  <h1>Datakilde</h1>
+
+  <div class="itk-template-extension--tool-section">
+    <h2 class="itk-template-extension--tool-headline">Vælg datakilde</h2>
+
+    <select
+        ng-model="slide.options.data_function"
+        ng-options="value.id as value.label group by value.group for value in availableDatasources">
+      <option>--</option>
+    </select>
+
+    <div>
+      Valgt datafunktion (id): {{slide.options.data_function ? '"' + slide.options.data_function + '"' : ''}}
+    </div>
+  </div>
+</div>

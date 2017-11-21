@@ -75,10 +75,32 @@ class DataService
      */
     public function getAvailableDataFunctions()
     {
-        // @TODO: Get translation.
-
         return [
-            'odaa-dokk1' => $this->translate('data_function.odaa-dokk1'),
+            'data_function.odaa-dokk1.all' => (object)[
+                'id' => 'data_function.odaa-dokk1.all',
+                'label' => $this->translate('data_function.odaa-dokk1.all'),
+                'group' => $this->translate('group.odaa-dokk1'),
+            ],
+            'data_function.odaa-dokk1.temperature' => (object)[
+                'id' => 'data_function.odaa-dokk1.temperature',
+                'label' => $this->translate('data_function.odaa-dokk1.temperature'),
+                'group' => $this->translate('group.odaa-dokk1'),
+            ],
+            'data_function.odaa-dokk1.daylight' => (object)[
+                'id' => 'data_function.odaa-dokk1.daylight',
+                'label' => $this->translate('data_function.odaa-dokk1.daylight'),
+                'group' => $this->translate('group.odaa-dokk1'),
+            ],
+            'data_function.odaa-dokk1.sound' => (object)[
+                'id' => 'data_function.odaa-dokk1.sound',
+                'label' => $this->translate('data_function.odaa-dokk1.sound'),
+                'group' => $this->translate('group.odaa-dokk1'),
+            ],
+            'data_function.odaa-dokk1.humidity' => (object)[
+                'id' => 'data_function.odaa-dokk1.humidity',
+                'label' => $this->translate('data_function.odaa-dokk1.humidity'),
+                'group' => $this->translate('group.odaa-dokk1'),
+            ],
         ];
     }
 
@@ -93,8 +115,20 @@ class DataService
         $data = [];
 
         switch ($functionName) {
-            case "odaa-dokk1":
-                $data = $this->odaaDokk1MeasuresDataFunction();
+            case "data_function.odaa-dokk1.all":
+                $data = $this->odaaDokk1MeasuresDataFunction(null);
+                break;
+            case "data_function.odaa-dokk1.temperature":
+                $data = $this->odaaDokk1MeasuresDataFunction("temperature");
+                break;
+            case "data_function.odaa-dokk1.daylight":
+                $data = $this->odaaDokk1MeasuresDataFunction("daylight");
+                break;
+            case "data_function.odaa-dokk1.sound":
+                $data = $this->odaaDokk1MeasuresDataFunction("sound");
+                break;
+            case "data_function.odaa-dokk1.humidity":
+                $data = $this->odaaDokk1MeasuresDataFunction("humidity");
                 break;
         }
 
@@ -118,7 +152,7 @@ class DataService
      *
      * @return array|null
      */
-    public function odaaDokk1MeasuresDataFunction()
+    public function odaaDokk1MeasuresDataFunction($field)
     {
         $input = null;
 
@@ -129,36 +163,40 @@ class DataService
             return null;
         }
 
-        if ($input === false) {
+        if ($input === false || !isset($input->result) || !isset($input->result->records)) {
             return null;
         }
 
         $data = [];
 
-        $data[0] = [
-            'name' => $this->translate('field.temperature'),
-            'unit' => '°C',
-            'value' => round($input->result->records[0]->val),
-//            'value_suffix' => '°',
+        $extractValues = [
+            'temperature' => 'TCA',
+            'daylight' => 'LUM',
+            'sound' => 'MCP',
+            'humidity' => 'HUMA'
         ];
 
-        $data[1] = [
-            'name' => $this->translate('field.daylight'),
-            'unit' => 'Lux',
-            'value' => round($input->result->records[2]->val),
-        ];
+        foreach ($extractValues as $key => $value) {
+            if ($field == null || $field == $key) {
+                $item = array_filter($input->result->records, function ($item) use (&$value) {
+                    return $item->sensor == $value;
+                });
 
-        $data[2] = [
-            'name' => $this->translate('field.sound'),
-            'unit' => 'dB',
-            'value' => round($input->result->records[3]->val),
-        ];
+                if (empty($item)) {
+                    continue;
+                }
 
-        $data[3] = [
-            'name' => $this->translate('field.humidity'),
-            'unit' => '%',
-            'value' => round($input->result->records[1]->val),
-        ];
+                $item = reset($item);
+
+                array_push($data, [
+                    'name' => $this->translate('field.' . $key),
+                    'unit' => $this->translate('unit.' . $key),
+                    'location' => $this->translate('location.odaa-dokk1'),
+                    'timestamp' => $item->time,
+                    'value' => round($item->val),
+                ]);
+            }
+        }
 
         return $data;
     }
