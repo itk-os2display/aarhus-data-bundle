@@ -1,0 +1,21 @@
+field:
+  temperature: Temperatur
+  daylight: Dagslys
+  sound: Lydniveau
+  humidity: Luftfugtighed
+unit:
+  temperature: '°C'
+  daylight: Lux
+  sound: dB
+  humidity: '%'
+data_function:
+  odaa-dokk1:
+    all: Alle målinger
+    temperature: Temperatur
+    daylight: Dagslys
+    sound: Lydstyrke
+    humidity: Luftfugtighed
+group:
+  odaa-dokk1: Havnefronten
+location:
+  odaa-dokk1: havnepladsen
