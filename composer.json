@@ -1,5 +1,5 @@
 {
-  "name": "itk-os2display/aarhus-data",
+  "name": "itk-os2display/aarhus-data-bundle",
   "description": "Os2Display aarhus data",
   "type": "symfony-bundle",
   "require": {
