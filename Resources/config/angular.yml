@@ -1,4 +1,6 @@
 assets:
+  js_prod:
+    - bundles/itkaarhusdata/assets/build/itkaarhusdata.min.js
 
 modules:
   itkDataModule:
