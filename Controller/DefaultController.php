@@ -24,6 +24,6 @@ class DefaultController extends Controller
      */
     public function testAction()
     {
-        return new JsonResponse($this->container->get('itk_aarhus_data.data_service')->odaaDokk1MeasuresDataFunction(null));
+        return new JsonResponse($this->container->get('itk_aarhus_data.data_service')->aarhusLibraryAndSchoolSunEnergyProduce());
     }
 }

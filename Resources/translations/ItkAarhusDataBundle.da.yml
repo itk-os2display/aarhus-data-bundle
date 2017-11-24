@@ -3,11 +3,17 @@ field:
   daylight: Dagslys
   sound: Lydniveau
   humidity: Luftfugtighed
+  energy_current: Lige nu
+  energy_today: I dag
+  energy_yesterday: I går
 unit:
   temperature: '°C'
   daylight: Lux
   sound: dB
   humidity: '%'
+  energy_current: kW
+  energy_today: kWh
+  energy_yesterday: kWh
 data_function:
   odaa-dokk1:
     all: Alle målinger
@@ -15,7 +21,9 @@ data_function:
     daylight: Dagslys
     sound: Lydstyrke
     humidity: Luftfugtighed
+  aarhus-library-school-sun-energy: Aarhus Kommunes solcelleanlæg placeret på skoler og biblioteker
 group:
-  odaa-dokk1: Havnefronten
+  odaa-dokk1: Havnefronten i Aarhus
+  aarhus: Aarhus
 location:
   odaa-dokk1: havnepladsen
