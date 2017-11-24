@@ -1,23 +1,32 @@
-<div class="itk-template-extension--tool" data-ng-class="{'open': open, 'close': !open}">
-  <div class="itk-template-extension--tool-header">
-    <div class="itk-template-extension--button" data-ng-click="closeTool()">
-      Afslut
+<div class="edit-menu--background" role="banner">
+  <div class="edit-menu--background-inner">
+    <div class="edit-menu--toggle-icon" data-ng-click="close()">
+      <div class="svg-clickable">
+        <object data="bundles/os2displayadmin/images/svg/cancel.svg" type="image/svg+xml">
+          <!-- Fallback (ie8)-->
+          <img src="bundles/os2displayadmin/images/cancel.png"/>
+        </object>
+      </div>
     </div>
-  </div>
+    <div class="edit-menu--background-page">
+      <div class="edit-menu--background-page-inner itk-template-extension--content">
+        <h2 class="edit-menu--background-header">Datakilde</h2>
 
-  <h1>Datakilde</h1>
+        <div class="itk-template-extension--tool-section">
+          <h2 class="itk-template-extension--tool-headline">Vælg datakilde</h2>
 
-  <div class="itk-template-extension--tool-section">
-    <h2 class="itk-template-extension--tool-headline">Vælg datakilde</h2>
+          <select
+              data-ng-model="slide.options.data_function"
+              data-ng-options="value.id as value.label group by value.group for value in availableDatasources">
+            <option>--</option>
+          </select>
 
-    <select
-        ng-model="slide.options.data_function"
-        ng-options="value.id as value.label group by value.group for value in availableDatasources">
-      <option>--</option>
-    </select>
-
-    <div>
-      Valgt datafunktion (id): {{slide.options.data_function ? '"' + slide.options.data_function + '"' : ''}}
+          <div>
+            Valgt datafunktion (id): {{slide.options.data_function ? '"' +
+            slide.options.data_function + '"' : ''}}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

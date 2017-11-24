@@ -5,6 +5,7 @@ namespace Itk\AarhusDataBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Os2Display\CoreBundle\Events\CronEvent;
 use Symfony\Component\Translation\TranslatorInterface;
+use GuzzleHttp;
 
 class DataService
 {
@@ -101,6 +102,11 @@ class DataService
                 'label' => $this->translate('data_function.odaa-dokk1.humidity'),
                 'group' => $this->translate('group.odaa-dokk1'),
             ],
+            'data_function.aarhus-library-school-sun-energy' => (object)[
+                'id' => 'data_function.aarhus-library-school-sun-energy',
+                'label' => $this->translate('data_function.aarhus-library-school-sun-energy'),
+                'group' => $this->translate('group.aarhus'),
+            ],
         ];
     }
 
@@ -115,20 +121,23 @@ class DataService
         $data = [];
 
         switch ($functionName) {
-            case "data_function.odaa-dokk1.all":
+            case 'data_function.odaa-dokk1.all':
                 $data = $this->odaaDokk1MeasuresDataFunction(null);
                 break;
-            case "data_function.odaa-dokk1.temperature":
-                $data = $this->odaaDokk1MeasuresDataFunction("temperature");
+            case 'data_function.odaa-dokk1.temperature':
+                $data = $this->odaaDokk1MeasuresDataFunction('temperature');
                 break;
-            case "data_function.odaa-dokk1.daylight":
-                $data = $this->odaaDokk1MeasuresDataFunction("daylight");
+            case 'data_function.odaa-dokk1.daylight':
+                $data = $this->odaaDokk1MeasuresDataFunction('daylight');
                 break;
-            case "data_function.odaa-dokk1.sound":
-                $data = $this->odaaDokk1MeasuresDataFunction("sound");
+            case 'data_function.odaa-dokk1.sound':
+                $data = $this->odaaDokk1MeasuresDataFunction('sound');
                 break;
-            case "data_function.odaa-dokk1.humidity":
-                $data = $this->odaaDokk1MeasuresDataFunction("humidity");
+            case 'data_function.odaa-dokk1.humidity':
+                $data = $this->odaaDokk1MeasuresDataFunction('humidity');
+                break;
+            case 'data_function.aarhus-library-school-sun-energy':
+                $data = $this->aarhusLibraryAndSchoolSunEnergyProduce();
                 break;
         }
 
@@ -147,6 +156,75 @@ class DataService
     }
 
     /**
+     * Gets sun energy production from schools and libraries in Aarhus.
+     * http://www.odaa.dk/api/3/action/datastore_search?resource_id=251528ca-8ec9-4b70-9960-83c4d0c4e7b6
+     *
+     * @return array|null
+     */
+    public function aarhusLibraryAndSchoolSunEnergyProduce()
+    {
+        $data = [];
+        $inputCurrent = null;
+        $inputHistorical = null;
+        $time = null;
+
+        try {
+            $client = new GuzzleHttp\Client();
+            $res = $client->request(
+                'GET',
+                'http://www.odaa.dk/api/3/action/datastore_search?resource_id=251528ca-8ec9-4b70-9960-83c4d0c4e7b6',
+                ['timeout' => 2]
+            );
+
+            $body = $res->getBody()->getContents();
+
+            $inputCurrent = json_decode($body);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        if ($inputCurrent === false ||
+            !isset($inputCurrent->result) ||
+            !isset($inputCurrent->result->records)) {
+            return null;
+        }
+
+        $sumCurrent = 0;
+        $sumToday = 0;
+
+        foreach ($inputCurrent->result->records as $record) {
+            $sumCurrent = $sumCurrent + $record->current;
+            $sumToday = $sumToday + $record->daily;
+        }
+
+        $data[0] = (object)[
+            'name' => $this->translate('field.energy_current'),
+            'id' => 'current',
+            'value' => floor($sumCurrent / 1000),
+            'timestamp' => $time,
+            'unit' => $this->translate('unit.energy_current'),
+        ];
+
+        $data[1] = (object)[
+            'name' => $this->translate('field.energy_today'),
+            'id' => 'today',
+            'value' => floor($sumToday / 1000),
+            'timestamp' => $time,
+            'unit' => $this->translate('unit.energy_today'),
+        ];
+/*
+        $data[2] = (object)[
+            'name' => $this->translate('field.energy_yesterday'),
+            'id' => 'yesterday',
+            'value' => 0,
+            'timestamp' => $time,
+            'unit' => $this->translate('unit.energy_yesterday'),
+        ];
+*/
+        return $data;
+    }
+
+    /**
      * Gets temperature, daylight, volume, humidity from Dokk1
      * http://www.odaa.dk/api/3/action/datastore_search?resource_id=e123e70c-9d13-461e-8715-f06ec41dd3cf
      *
@@ -157,8 +235,16 @@ class DataService
         $input = null;
 
         try {
-            $url = 'http://www.odaa.dk/api/3/action/datastore_search?resource_id=e123e70c-9d13-461e-8715-f06ec41dd3cf';
-            $input = json_decode(file_get_contents($url));
+            $client = new GuzzleHttp\Client();
+            $res = $client->request(
+                'GET',
+                'http://www.odaa.dk/api/3/action/datastore_search?resource_id=e123e70c-9d13-461e-8715-f06ec41dd3cf',
+                ['timeout' => 2]
+            );
+
+            $body = $res->getBody()->getContents();
+
+            $input = json_decode($body);
         } catch (\Exception $e) {
             return null;
         }
@@ -178,9 +264,12 @@ class DataService
 
         foreach ($extractValues as $key => $value) {
             if ($field == null || $field == $key) {
-                $item = array_filter($input->result->records, function ($item) use (&$value) {
-                    return $item->sensor == $value;
-                });
+                $item = array_filter(
+                    $input->result->records,
+                    function ($item) use (&$value) {
+                        return $item->sensor == $value;
+                    }
+                );
 
                 if (empty($item)) {
                     continue;
