@@ -102,11 +102,11 @@ class DataService
                 'label' => $this->translate('data_function.odaa-dokk1.humidity'),
                 'group' => $this->translate('group.odaa-dokk1'),
             ],
-            'data_function.aarhus-library-school-sun-energy' => (object)[
+/*            'data_function.aarhus-library-school-sun-energy' => (object)[
                 'id' => 'data_function.aarhus-library-school-sun-energy',
                 'label' => $this->translate('data_function.aarhus-library-school-sun-energy'),
                 'group' => $this->translate('group.aarhus'),
-            ],
+            ],*/
         ];
     }
 
@@ -136,9 +136,9 @@ class DataService
             case 'data_function.odaa-dokk1.humidity':
                 $data = $this->odaaDokk1MeasuresDataFunction('humidity');
                 break;
-/*            case 'data_function.aarhus-library-school-sun-energy':
+            case 'data_function.aarhus-library-school-sun-energy':
                 $data = $this->aarhusLibraryAndSchoolSunEnergyProduce();
-                break;*/
+                break;
         }
 
         return $data;
