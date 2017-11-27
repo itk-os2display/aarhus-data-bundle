@@ -136,9 +136,9 @@ class DataService
             case 'data_function.odaa-dokk1.humidity':
                 $data = $this->odaaDokk1MeasuresDataFunction('humidity');
                 break;
-            case 'data_function.aarhus-library-school-sun-energy':
+/*            case 'data_function.aarhus-library-school-sun-energy':
                 $data = $this->aarhusLibraryAndSchoolSunEnergyProduce();
-                break;
+                break;*/
         }
 
         return $data;
