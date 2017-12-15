@@ -1,0 +1,67 @@
+$font-black: 'Arial Black', sans-serif;
+$font-regular: Arial, sans-serif;
+
+$color-highlight: #eaeaea;
+$color-base: #333;
+$color-text: #fff;
+
+.lokalcenter-only-text {
+  background-color: $color-base;
+  color: $color-text;
+  font-family: $font-regular;
+  font-size: 16px;
+  font-weight: normal;
+  position: relative;
+  height: 100%;
+  padding: 5%;
+  overflow: hidden;
+  text-align: left;
+
+  display: flex;
+  align-items: flex-start;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+  }
+
+  h1 {
+    font-family: $font-black;
+  }
+
+  ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin: 0 0 0 1em;
+    padding: 0;
+  }
+  ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+    margin: 0 0 0 1em;
+    padding: 0;
+  }
+  ul ul, ol ul {
+    list-style-type: circle;
+    list-style-position: inside;
+  }
+  ol ol, ul ol {
+    list-style-type: lower-latin;
+    list-style-position: inside;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    user-select: none;
+  }
+
+  .text {
+    font-size: 2em;
+  }
+}

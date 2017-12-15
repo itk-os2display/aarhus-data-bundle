@@ -4,3 +4,7 @@ services:
         arguments: ['@doctrine.orm.entity_manager', '@translator']
         tags:
           - { name: kernel.event_listener, event: ik.cron, method: onCron }
+
+    itk.aarhus_data_cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments: [%kernel.cache_dir%]

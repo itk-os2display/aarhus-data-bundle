@@ -1,0 +1,12 @@
+<div class="itk-data"
+     data-ng-style="{
+      'width': theStyle.width,
+      'height': theStyle.height,
+      'font-size': theStyle.fontsize,
+      'background-color': ikSlide.options.color,
+      'color': ikSlide.options.textcolor}">
+  <div class="tpl-headline"></div>
+  <div class="tpl-data" data-ng-repeat="data in ikSlide.external_data">
+    {{data.date}} - {{data.value}}
+  </div>
+</div>

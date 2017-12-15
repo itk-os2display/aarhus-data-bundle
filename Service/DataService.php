@@ -14,6 +14,8 @@ class DataService
 
     /**
      * DataService constructor.
+     * @param \Doctrine\ORM\EntityManager $entityManager The entity manager.
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator The translator.
      */
     public function __construct(
         EntityManager $entityManager,
@@ -25,10 +27,8 @@ class DataService
 
     /**
      * CronEvent event listener.
-     *
-     * @param CronEvent $event
      */
-    public function onCron(CronEvent $event)
+    public function onCron()
     {
         $this->processDataFeeds();
     }
@@ -53,7 +53,11 @@ class DataService
                 if (isset($cache[$options['data_function']])) {
                     $data = $cache[$options['data_function']];
                 } else {
-                    $data = $this->dataFunction($options['data_function']);
+                    $data = $this->dataFunction(
+                        $options['data_function'],
+                        $options['data_url'],
+                        $options['data_type']
+                    );
                     $cache[$options['data_function']] = $data;
                 }
             } else {
@@ -67,6 +71,60 @@ class DataService
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param $url
+     * @return null|string
+     */
+    private function getUrl($url)
+    {
+        try {
+            $client = new GuzzleHttp\Client();
+            $res = $client->request(
+                'GET',
+                $url,
+                ['timeout' => 2]
+            );
+
+            return $res->getBody()->getContents();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get results from the url. Parse results from json or csv.
+     *
+     * @param string $url The url from which to get the data.
+     * @param string $type The type of the data.
+     *   Allowed types: json, csv.
+     *
+     * @return array
+     */
+    private function dataUrl($url, $type)
+    {
+        $body = $this->getUrl($url);
+
+        $content = [];
+
+        if (!empty($body)) {
+            switch ($type) {
+                case 'json':
+                    $content = json_decode($body);
+                    break;
+                case 'csv':
+                    $lines = explode("\r\n", $body);
+
+                    foreach ($lines as $line) {
+                        $content[] = str_getcsv($line);
+                    }
+
+                    break;
+            }
+        }
+
+        return $content;
     }
 
     /**
@@ -84,12 +142,16 @@ class DataService
             ],
             'data_function.odaa-dokk1.temperature' => (object)[
                 'id' => 'data_function.odaa-dokk1.temperature',
-                'label' => $this->translate('data_function.odaa-dokk1.temperature'),
+                'label' => $this->translate(
+                    'data_function.odaa-dokk1.temperature'
+                ),
                 'group' => $this->translate('group.odaa-dokk1'),
             ],
             'data_function.odaa-dokk1.daylight' => (object)[
                 'id' => 'data_function.odaa-dokk1.daylight',
-                'label' => $this->translate('data_function.odaa-dokk1.daylight'),
+                'label' => $this->translate(
+                    'data_function.odaa-dokk1.daylight'
+                ),
                 'group' => $this->translate('group.odaa-dokk1'),
             ],
             'data_function.odaa-dokk1.sound' => (object)[
@@ -99,14 +161,23 @@ class DataService
             ],
             'data_function.odaa-dokk1.humidity' => (object)[
                 'id' => 'data_function.odaa-dokk1.humidity',
-                'label' => $this->translate('data_function.odaa-dokk1.humidity'),
+                'label' => $this->translate(
+                    'data_function.odaa-dokk1.humidity'
+                ),
                 'group' => $this->translate('group.odaa-dokk1'),
             ],
-/*            'data_function.aarhus-library-school-sun-energy' => (object)[
-                'id' => 'data_function.aarhus-library-school-sun-energy',
-                'label' => $this->translate('data_function.aarhus-library-school-sun-energy'),
-                'group' => $this->translate('group.aarhus'),
-            ],*/
+            'data_function.birthday' => (object)[
+                'id' => 'data_function.birthday',
+                'label' => $this->translate(
+                    'data_function.birthday'
+                ),
+                'group' => $this->translate('group.other'),
+            ],
+            /*            'data_function.aarhus-library-school-sun-energy' => (object)[
+                            'id' => 'data_function.aarhus-library-school-sun-energy',
+                            'label' => $this->translate('data_function.aarhus-library-school-sun-energy'),
+                            'group' => $this->translate('group.aarhus'),
+                        ],*/
         ];
     }
 
@@ -116,28 +187,50 @@ class DataService
      * @param $functionName
      * @return array|null
      */
-    private function dataFunction($functionName)
+    private function dataFunction($functionName, $url = null, $type = 'json')
     {
         $data = [];
 
         switch ($functionName) {
             case 'data_function.odaa-dokk1.all':
-                $data = $this->odaaDokk1MeasuresDataFunction(null);
+                $data = $this->odaaDokk1MeasuresDataFunction(null, $url, $type);
                 break;
             case 'data_function.odaa-dokk1.temperature':
-                $data = $this->odaaDokk1MeasuresDataFunction('temperature');
+                $data = $this->odaaDokk1MeasuresDataFunction(
+                    'temperature',
+                    $url,
+                    $type
+                );
                 break;
             case 'data_function.odaa-dokk1.daylight':
-                $data = $this->odaaDokk1MeasuresDataFunction('daylight');
+                $data = $this->odaaDokk1MeasuresDataFunction(
+                    'daylight',
+                    $url,
+                    $type
+                );
                 break;
             case 'data_function.odaa-dokk1.sound':
-                $data = $this->odaaDokk1MeasuresDataFunction('sound');
+                $data = $this->odaaDokk1MeasuresDataFunction(
+                    'sound',
+                    $url,
+                    $type
+                );
                 break;
             case 'data_function.odaa-dokk1.humidity':
-                $data = $this->odaaDokk1MeasuresDataFunction('humidity');
+                $data = $this->odaaDokk1MeasuresDataFunction(
+                    'humidity',
+                    $url,
+                    $type
+                );
                 break;
             case 'data_function.aarhus-library-school-sun-energy':
-                $data = $this->aarhusLibraryAndSchoolSunEnergyProduce();
+                $data = $this->aarhusLibraryAndSchoolSunEnergyProduce(
+                    $url,
+                    $type
+                );
+                break;
+            case 'data_function.birthday':
+                $data = $this->birthday($url, $type);
                 break;
         }
 
@@ -156,32 +249,50 @@ class DataService
     }
 
     /**
+     * Sorts elements from data url by birthday.
+     *
+     * @param $url
+     * @param $type
+     * @return array
+     */
+    public function birthday($url, $type)
+    {
+        $data = $this->dataUrl($url, $type);
+
+        $currentMonth = date('n');
+        $currentDay = date('j');
+        $currentYear = date('Y');
+
+        foreach ($data as $dataElement) {
+            $name = $dataElement[0];
+            $birth = explode('/', $dataElement[1]);
+            $day = $birth[0];
+            $month = $birth[1];
+
+            if ($month < $currentMonth) {
+                $birthday = mktime(23, 59, 0, $month, $day, $currentYear + 1);
+            } elseif ($month == $currentMonth && $day > $currentDay) {
+                $birthday = mktime(23, 59, 0, $month, $day, $currentYear + 1);
+            } else {
+                $birthday = mktime(23, 59, 0, $month, $day);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Gets sun energy production from schools and libraries in Aarhus.
      * http://www.odaa.dk/api/3/action/datastore_search?resource_id=251528ca-8ec9-4b70-9960-83c4d0c4e7b6
      *
      * @return array|null
      */
-    public function aarhusLibraryAndSchoolSunEnergyProduce()
+    public function aarhusLibraryAndSchoolSunEnergyProduce($url, $type)
     {
         $data = [];
-        $inputCurrent = null;
-        $inputHistorical = null;
         $time = null;
 
-        try {
-            $client = new GuzzleHttp\Client();
-            $res = $client->request(
-                'GET',
-                'http://www.odaa.dk/api/3/action/datastore_search?resource_id=251528ca-8ec9-4b70-9960-83c4d0c4e7b6',
-                ['timeout' => 2]
-            );
-
-            $body = $res->getBody()->getContents();
-
-            $inputCurrent = json_decode($body);
-        } catch (\Exception $e) {
-            return null;
-        }
+        $inputCurrent = $this->dataUrl($url, $type);
 
         if ($inputCurrent === false ||
             !isset($inputCurrent->result) ||
@@ -212,15 +323,17 @@ class DataService
             'timestamp' => $time,
             'unit' => $this->translate('unit.energy_today'),
         ];
-/*
-        $data[2] = (object)[
-            'name' => $this->translate('field.energy_yesterday'),
-            'id' => 'yesterday',
-            'value' => 0,
-            'timestamp' => $time,
-            'unit' => $this->translate('unit.energy_yesterday'),
-        ];
-*/
+
+        /*
+                $data[2] = (object)[
+                    'name' => $this->translate('field.energy_yesterday'),
+                    'id' => 'yesterday',
+                    'value' => 0,
+                    'timestamp' => $time,
+                    'unit' => $this->translate('unit.energy_yesterday'),
+                ];
+        */
+
         return $data;
     }
 
@@ -230,24 +343,9 @@ class DataService
      *
      * @return array|null
      */
-    public function odaaDokk1MeasuresDataFunction($field)
+    public function odaaDokk1MeasuresDataFunction($field, $url, $type)
     {
-        $input = null;
-
-        try {
-            $client = new GuzzleHttp\Client();
-            $res = $client->request(
-                'GET',
-                'http://www.odaa.dk/api/3/action/datastore_search?resource_id=e123e70c-9d13-461e-8715-f06ec41dd3cf',
-                ['timeout' => 2]
-            );
-
-            $body = $res->getBody()->getContents();
-
-            $input = json_decode($body);
-        } catch (\Exception $e) {
-            return null;
-        }
+        $input = $this->dataUrl($url, $type);
 
         if ($input === false || !isset($input->result) || !isset($input->result->records)) {
             return null;
@@ -259,7 +357,7 @@ class DataService
             'temperature' => 'TCA',
             'daylight' => 'LUM',
             'sound' => 'MCP',
-            'humidity' => 'HUMA'
+            'humidity' => 'HUMA',
         ];
 
         foreach ($extractValues as $key => $value) {
@@ -277,13 +375,16 @@ class DataService
 
                 $item = reset($item);
 
-                array_push($data, [
-                    'name' => $this->translate('field.' . $key),
-                    'unit' => $this->translate('unit.' . $key),
-                    'location' => $this->translate('location.odaa-dokk1'),
-                    'timestamp' => $item->time,
-                    'value' => round($item->val),
-                ]);
+                array_push(
+                    $data,
+                    [
+                        'name' => $this->translate('field.'.$key),
+                        'unit' => $this->translate('unit.'.$key),
+                        'location' => $this->translate('location.odaa-dokk1'),
+                        'timestamp' => $item->time,
+                        'value' => round($item->val),
+                    ]
+                );
             }
         }
 
