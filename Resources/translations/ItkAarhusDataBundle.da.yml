@@ -6,7 +6,13 @@ field:
   energy_current: Lige nu
   energy_today: I dag
   energy_yesterday: I går
+  water_temperature: Vandtemperatur
+  water_distance: Afstand til vandet
+  wind_speed: Vindhastighed
+  rain: Regn
+  pressure: Lufttryk
 unit:
+  rain: 'mm/h'
   temperature: '°C'
   daylight: Lux
   sound: dB
@@ -14,6 +20,9 @@ unit:
   energy_current: kW
   energy_today: kWh
   energy_yesterday: kWh
+  water_distance: cm
+  wind_speed: km/t
+  pressure: mBar
 data_function:
   odaa-dokk1:
     all: Alle målinger
@@ -22,8 +31,20 @@ data_function:
     sound: Lydstyrke
     humidity: Luftfugtighed
   aarhus-library-school-sun-energy: Aarhus Kommunes solcelleanlæg placeret på skoler og biblioteker
+  aarhus-waterfront:
+    weather-1: Vandtemperatur, Afstand til vandet, Vindhastighed, Regn
+    weather-2: Temperatur, Luftfugtighed, Dagslys, Lufttryk
+    water_temperature: Vandtemperatur
+    water_distance: Afstand til vandet
+    wind_speed: Vindhastighed
+    rain: Regn
+    temperature: Temperatur
+    humidity: Luftfugtighed
+    daylight: Dagslys
+    pressure: Lufttryk
 group:
   odaa-dokk1: Havnefronten i Aarhus
   aarhus: Aarhus
 location:
   odaa-dokk1: havnepladsen
+  aarhus_waterfront: havnepladsen
