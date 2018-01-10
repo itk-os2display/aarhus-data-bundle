@@ -207,7 +207,7 @@ class DataService
                     [
                         'name' => $this->translate('field.' . $record->type),
                         'unit' => $this->translate('unit.' . $record->type),
-                        'location' => $this->translate('location.waterfront'),
+                        'location' => $this->translate('location.aarhus_waterfront'),
                         'timestamp' => $record->time,
                         'value' => round($record->value),
                     ]
