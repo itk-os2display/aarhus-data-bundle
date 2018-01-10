@@ -28,16 +28,16 @@
             slide.options.data_function + '"' : ''}}
           </div>
 
-          <label for="source">Vælg kilde</label>
-          <input id="source" type="text" data-ng-model="slide.options.data_url">
+          <div>
+            <label for="source">Vælg kilde</label>
+            <input id="source" type="text" data-ng-model="slide.options.data_url">
 
-          <label for="type">Type</label>
-          <select id="type"
-                  ng-model="slide.options.data_type">
-            <option value="{{data_type}}" data-ng-repeat="data_type in data_types">{{data_type}}</option>
-          </select>
+            <label for="type">Type</label>
+            <select id="type" data-ng-model="slide.options.data_type">
+              <option value="{{data_type}}" data-ng-repeat="data_type in data_types">{{data_type}}</option>
+            </select>
+          </div>
         </div>
-
       </div>
     </div>
   </div>

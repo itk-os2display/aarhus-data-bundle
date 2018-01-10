@@ -148,10 +148,15 @@ class DataService
     public function getAvailableDataFunctions()
     {
         return [
+            'data_function.custom' => (object)[
+                'id' => 'data_function.custom',
+                'label' => $this->translate('data_function.custom'),
+                'group' => $this->translate('group.main'),
+            ],
             'data_function.ckan' => (object)[
                 'id' => 'data_function.ckan',
                 'label' => $this->translate('data_function.ckan'),
-                'group' => $this->translate('group.ckan'),
+                'group' => $this->translate('group.main'),
             ],
         ];
     }
@@ -169,6 +174,9 @@ class DataService
         $data = [];
 
         switch ($functionName) {
+            case 'data_function.custom':
+                $data = $this->dataUrl($url, $type);
+                break;
             case 'data_function.ckan':
                 $data = $this->getCKAN($url, $type);
                 break;
@@ -207,7 +215,7 @@ class DataService
                     [
                         'name' => $this->translate('field.' . $record->type),
                         'unit' => $this->translate('unit.' . $record->type),
-                        'location' => $this->translate('location.aarhus_waterfront'),
+                        'location' => $this->translate('location.waterfront'),
                         'timestamp' => $record->time,
                         'value' => round($record->value),
                     ]
