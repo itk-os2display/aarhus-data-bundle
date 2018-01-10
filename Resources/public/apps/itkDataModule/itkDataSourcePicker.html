@@ -2,14 +2,16 @@
   <div class="edit-menu--background-inner">
     <div class="edit-menu--toggle-icon" data-ng-click="close()">
       <div class="svg-clickable">
-        <object data="bundles/os2displayadmin/images/svg/cancel.svg" type="image/svg+xml">
+        <object data="bundles/os2displayadmin/images/svg/cancel.svg"
+                type="image/svg+xml">
           <!-- Fallback (ie8)-->
           <img src="bundles/os2displayadmin/images/cancel.png"/>
         </object>
       </div>
     </div>
     <div class="edit-menu--background-page">
-      <div class="edit-menu--background-page-inner itk-template-extension--content">
+      <div
+          class="edit-menu--background-page-inner itk-template-extension--content">
         <h2 class="edit-menu--background-header">Datakilde</h2>
 
         <div class="itk-template-extension--tool-section">
@@ -25,7 +27,17 @@
             Valgt datafunktion (id): {{slide.options.data_function ? '"' +
             slide.options.data_function + '"' : ''}}
           </div>
+
+          <label for="source">Vælg kilde</label>
+          <input id="source" type="text" data-ng-model="slide.options.data_url">
+
+          <label for="type">Type</label>
+          <select id="type"
+                  ng-model="slide.options.data_type">
+            <option value="{{data_type}}" data-ng-repeat="data_type in data_types">{{data_type}}</option>
+          </select>
         </div>
+
       </div>
     </div>
   </div>

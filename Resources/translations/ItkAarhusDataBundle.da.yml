@@ -1,4 +1,7 @@
 field:
+  air_temperature: Temperatur
+  water_temperature: Vandtemperatur
+  lux: Dagslys
   temperature: Temperatur
   daylight: Dagslys
   sound: Lydniveau
@@ -12,6 +15,9 @@ field:
   rain: Regn
   pressure: Lufttryk
 unit:
+  air_temperature: '°C'
+  water_temperature: '°C'
+  lux: Lux
   rain: 'mm/h'
   temperature: '°C'
   daylight: Lux
