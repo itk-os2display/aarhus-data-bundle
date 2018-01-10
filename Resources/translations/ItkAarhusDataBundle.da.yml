@@ -1,29 +1,40 @@
 field:
+  battery: Batteri
+  air_temperature: Temperatur
+  water_temperature: Vandtemperatur
+  lux: Dagslys
+  rain: Regn
+  humidity: Luftfugtighed
+  pressure: Lufttryk
+  wind_speed: Vindhastighed
+  distance_to_water: Afstand til vandet
+  solar_radiation: Solindstråling
   temperature: Temperatur
   daylight: Dagslys
   sound: Lydniveau
-  humidity: Luftfugtighed
   energy_current: Lige nu
   energy_today: I dag
   energy_yesterday: I går
 unit:
+  battery: '%'
+  air_temperature: '°C'
+  water_temperature: '°C'
+  lux: Lux
+  rain: 'mm/h'
+  humidity: '%'
+  pressure: Pascal
+  wind_speed: km/t
+  distance_to_water: cm
+  solar_radiation: ''
   temperature: '°C'
   daylight: Lux
   sound: dB
-  humidity: '%'
   energy_current: kW
   energy_today: kWh
   energy_yesterday: kWh
 data_function:
-  odaa-dokk1:
-    all: Alle målinger
-    temperature: Temperatur
-    daylight: Dagslys
-    sound: Lydstyrke
-    humidity: Luftfugtighed
-  aarhus-library-school-sun-energy: Aarhus Kommunes solcelleanlæg placeret på skoler og biblioteker
+  ckan: CKAN url
 group:
-  odaa-dokk1: Havnefronten i Aarhus
   aarhus: Aarhus
 location:
-  odaa-dokk1: havnepladsen
+  aarhus_waterfront: havnepladsen

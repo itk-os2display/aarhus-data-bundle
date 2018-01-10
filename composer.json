@@ -5,6 +5,7 @@
   "require": {
     "os2display/admin-bundle": "^1.0",
     "itk-os2display/template-extension-bundle": "^1.0",
+    "doctrine/cache": "^1.0",
     "guzzlehttp/guzzle": "^6.2"
   },
   "autoload": {

@@ -20,9 +20,11 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('itk_aarhus_data');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+            ->integerNode('cache_ttl')->defaultValue(900)->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }
