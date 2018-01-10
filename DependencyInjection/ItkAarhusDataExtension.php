@@ -20,5 +20,10 @@ class ItkAarhusDataExtension extends Os2DisplayBaseExtension
         $this->dir = __DIR__;
 
         parent::load($configs, $container);
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        $def = $container->getDefinition('itk_aarhus_data.data_service');
+        $def->replaceArgument(3, $config['cache_ttl']);
     }
 }
