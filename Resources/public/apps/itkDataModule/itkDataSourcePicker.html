@@ -17,24 +17,29 @@
         <div class="itk-template-extension--tool-section">
           <h2 class="itk-template-extension--tool-headline">Vælg datakilde</h2>
 
-          <select
-              data-ng-model="slide.options.data_function"
-              data-ng-options="value.id as value.label group by value.group for value in availableDatasources">
-            <option>--</option>
-          </select>
-
-          <div>
-            Valgt datafunktion (id): {{slide.options.data_function ? '"' +
-            slide.options.data_function + '"' : ''}}
+          <div class="itk-template-extension--block">
+            <select
+                data-ng-model="slide.options.data_function"
+                data-ng-options="value.id as value.label group by value.group for value in availableDatasources">
+              <option>--</option>
+            </select>
           </div>
 
-          <div>
+          <div
+              class="itk-template-extension--block itk-template-extension--tool-description"
+              data-ng-if="availableDatasources && slide.options.data_function">{{availableDatasources[slide.options.data_function].description}}
+          </div>
+
+          <div class="itk-template-extension--block">
             <label for="source">Vælg kilde</label>
-            <input id="source" type="text" data-ng-model="slide.options.data_url">
+            <input id="source" type="text"
+                   data-ng-model="slide.options.data_url">
 
             <label for="type">Type</label>
             <select id="type" data-ng-model="slide.options.data_type">
-              <option value="{{data_type}}" data-ng-repeat="data_type in data_types">{{data_type}}</option>
+              <option value="{{dataType}}"
+                      data-ng-repeat="dataType in dataTypes">{{dataType}}
+              </option>
             </select>
           </div>
         </div>

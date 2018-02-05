@@ -28,7 +28,7 @@ angular.module('itkDataModule').directive('itkDataSourcePicker', [
           }
         );
 
-        scope.data_types = ['json', 'csv']
+        scope.dataTypes = ['json', 'csv']
 
       },
       templateUrl: '/bundles/itkaarhusdata/apps/itkDataModule/itkDataSourcePicker.html'
