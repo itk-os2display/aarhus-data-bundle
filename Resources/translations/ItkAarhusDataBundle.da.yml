@@ -34,7 +34,8 @@ unit:
   energy_yesterday: kWh
 data_function:
   ckan: CKAN url
+  custom: Url
 group:
-  aarhus: Aarhus
+  main: Generelle
 location:
-  aarhus_waterfront: havnepladsen
+  waterfront: havnefronten
