@@ -152,11 +152,13 @@ class DataService
                 'id' => 'data_function.custom',
                 'label' => $this->translate('data_function.custom'),
                 'group' => $this->translate('group.main'),
+                'description' => $this->translate('data_function_descriptions.custom'),
             ],
             'data_function.ckan' => (object)[
                 'id' => 'data_function.ckan',
                 'label' => $this->translate('data_function.ckan'),
                 'group' => $this->translate('group.main'),
+                'description' => $this->translate('data_function_descriptions.ckan'),
             ],
         ];
     }
