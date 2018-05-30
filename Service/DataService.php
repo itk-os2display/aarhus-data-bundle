@@ -210,7 +210,8 @@ class DataService
 
         $result = [];
 
-        if ($data->success && isset($data->result) && isset($data->result->records)) {
+        if (isset($data) && isset($data->success) && $data->success &&
+            isset($data->result) && isset($data->result->records)) {
             foreach ($data->result->records as $record) {
                 array_push(
                     $result,
