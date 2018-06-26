@@ -7,4 +7,4 @@ services:
 
     itk.aarhus_data_cache:
         class: Doctrine\Common\Cache\FilesystemCache
-        arguments: [%kernel.cache_dir%]
+        arguments: ['%kernel.cache_dir%']
